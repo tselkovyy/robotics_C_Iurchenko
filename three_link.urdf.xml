@@ -1,0 +1,109 @@
+<robot name="pendulum">
+
+    <!-- ================= MATERIALS ================= -->
+    <material name="black"><color rgba="0 0 0 1"/></material>
+    <material name="white"><color rgba="1 1 1 1"/></material>
+    <material name="gray"><color rgba="0.4 0.4 0.4 1"/></material>
+
+    <!-- ================= LINKS ================= -->
+    <link name="world"/>
+
+    <link name="base">
+        <visual>
+            <geometry><sphere radius="0.1"/></geometry>
+            <material name="white"/>
+        </visual>
+    </link>
+
+    <!-- Intermediate link after yaw joint -->
+    <link name="link_0">
+        <visual>
+            <geometry><sphere radius="0.03"/></geometry>
+            <material name="gray"/>
+        </visual>
+    </link>
+
+    <link name="link_1">
+        <visual>
+            <geometry><cylinder radius="0.01" length="0.5"/></geometry>
+            <origin xyz="0 0 0.25"/>
+            <material name="gray"/>
+        </visual>
+    </link>
+
+    <link name="link_eef1">
+        <visual>
+            <geometry><sphere radius="0.05"/></geometry>
+            <origin xyz="0 0 0.025"/>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <link name="link_2">
+        <visual>
+            <geometry><cylinder radius="0.01" length="0.5"/></geometry>
+            <origin xyz="0 0 0.25"/>
+            <material name="gray"/>
+        </visual>
+    </link>
+
+    <link name="link_eef2">
+        <visual>
+            <geometry><sphere radius="0.05"/></geometry>
+            <origin xyz="0 0 0.025"/>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <!-- ================= JOINTS ================= -->
+
+    <!-- World to base -->
+    <joint name="world_to_base" type="fixed">
+        <parent link="world"/>
+        <child link="base"/>
+        <origin xyz="0 0 1.5"/>
+    </joint>
+
+    <!-- Joint 0: yaw around Z -->
+    <joint name="joint_0" type="revolute">
+        <parent link="base"/>
+        <child link="link_0"/>
+        <origin xyz="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.14" upper="3.14" effort="50" velocity="10"/>
+        <dynamics damping="0.2"/>
+    </joint>
+
+    <!-- Joint 1 -->
+    <joint name="joint_1" type="revolute">
+        <parent link="link_0"/>
+        <child link="link_1"/>
+        <origin xyz="0 0 0" rpy="0 3.141592653589793 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.14" upper="3.14" effort="50" velocity="10"/>
+        <dynamics damping="0.5"/>
+    </joint>
+
+    <joint name="joint_eef1" type="fixed">
+        <parent link="link_1"/>
+        <child link="link_eef1"/>
+        <origin xyz="0 0 0.5"/>
+    </joint>
+
+    <!-- Joint 2 -->
+    <joint name="joint_2" type="revolute">
+        <parent link="link_eef1"/>
+        <child link="link_2"/>
+        <origin xyz="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-3.14" upper="3.14" effort="50" velocity="10"/>
+        <dynamics damping="0.5"/>
+    </joint>
+
+    <joint name="joint_eef2" type="fixed">
+        <parent link="link_2"/>
+        <child link="link_eef2"/>
+        <origin xyz="0 0 0.5"/>
+    </joint>
+
+</robot>
